@@ -10,16 +10,10 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _titleText() {
-    const TextStyle headerStyle = TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w700,
-      color: Colors.blue,
-    );
     return Container(
       margin: const EdgeInsets.all(20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
         children: [
           const Text(
             'MemeNote',
@@ -29,10 +23,30 @@ class HomePage extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
-          const Text("Home", style: headerStyle),
-          const Text("Profile", style: headerStyle),
+          _menuDropDown(),
         ],
       ),
+    );
+  }
+
+  Widget _menuDropDown() {
+    const TextStyle navStyle = TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: Colors.blue,
+    );
+    String selectedValue = "Home";
+    List<DropdownMenuItem<String>> items =
+        ["Home", "About", "Contact", "Login", "Sign Up"].map((e) {
+          return DropdownMenuItem(child: Text(e), value: e);
+        }).toList();
+    return DropdownButton<String>(
+      value: selectedValue,
+      style: navStyle,
+      items: items,
+      onChanged: (String? newValue) {
+        selectedValue = newValue!;
+      },
     );
   }
 
