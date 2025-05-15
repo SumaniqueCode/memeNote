@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w900,
-              color: Colors.blue,
+              color: Colors.white,
             ),
           ),
           _menuDropDown(),
@@ -33,17 +33,31 @@ class HomePage extends StatelessWidget {
     const TextStyle navStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w700,
-      color: Colors.blue,
+      color: Colors.white,
     );
     String selectedValue = "Home";
-    List<DropdownMenuItem<String>> items =
-        ["Home", "About", "Contact", "Login", "Sign Up"].map((e) {
-          return DropdownMenuItem(child: Text(e), value: e);
-        }).toList();
+    List<String> items =["Home", "About", "Contact", "Login", "Sign Up"];
     return DropdownButton<String>(
       value: selectedValue,
       style: navStyle,
-      items: items,
+      icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+      dropdownColor: Colors.blue.shade800,
+      borderRadius: BorderRadius.circular(6),
+      underline: SizedBox(),
+      items: items.map((e) {
+          return DropdownMenuItem(
+            value: e,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey, width: 1),
+                ),
+              ),
+              child: Text(e),
+            ),
+          );
+        }).toList(),
       onChanged: (String? newValue) {
         selectedValue = newValue!;
       },
