@@ -1,12 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:memenote/pages/about_page.dart';
 import 'package:memenote/widgets/custom_dropdown.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> items = ["Home", "About", "Contact", "Login", "Sign Up"];
+  String selectedValue = "Home";
+
+  Widget _getSelectedContent() {
+    switch (selectedValue) {
+      case "About":
+        return Center(child:AboutPage() );
+      case "Contact":
+        return Center(child: Text("Contact Page", style: TextStyle(color: Colors.white)));
+      case "Login":
+        return Center(child: Text("Login Page", style: TextStyle(color: Colors.white)));
+      case "Sign Up":
+        return Center(child: Text("Sign Up Page", style: TextStyle(color: Colors.white)));
+      default:
+        return _adminImage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Column(children: [_titleText(), _adminImage()])),
+      backgroundColor: Colors.black, // Optional: match design
+      body: SafeArea(
+        child: Column(
+          children: [
+            _titleText(),
+            Expanded(child: _getSelectedContent()),
+          ],
+        ),
+      ),
     );
   }
 
@@ -24,15 +57,17 @@ class HomePage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          _menuDropDown(),
+          CustomDropdown(
+            values: items,
+            onSelected: (value) {
+              setState(() {
+                selectedValue = value;
+              });
+            },
+          ),
         ],
       ),
     );
-  }
-
-  Widget _menuDropDown() {
-    List<String> items = ["Home", "About", "Contact", "Login", "Sign Up"];
-    return CustomDropdown(values: items);
   }
 
   Widget _adminImage() {
@@ -40,7 +75,7 @@ class HomePage extends StatelessWidget {
       height: 150,
       width: 150,
       margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.contain,
           image: AssetImage("assets/images/admin_circular.png"),
