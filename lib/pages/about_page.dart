@@ -6,6 +6,6 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("About Page", style: TextStyle(color: Colors.white),);
+    return Text("About Page",         style: const TextStyle(fontSize: 24, color: Colors.white),);
   }
 }

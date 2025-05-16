@@ -1,7 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:memenote/pages/about_page.dart';
-import 'package:memenote/widgets/custom_dropdown.dart';
 
+// Reusable dropdown widget
+class CustomDropdown extends StatefulWidget {
+  final List<String> values;
+  final void Function(String) onSelected;
+
+  const CustomDropdown({
+    required this.values,
+    required this.onSelected,
+    super.key,
+  });
+
+  @override
+  State<CustomDropdown> createState() => _CustomDropdownState();
+}
+
+class _CustomDropdownState extends State<CustomDropdown> {
+  late String selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.values.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: selectedValue,
+      dropdownColor: Colors.blue.shade800,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+      underline: const SizedBox(),
+      items:
+          widget.values
+              .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+              .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => selectedValue = value);
+          widget.onSelected(value);
+        }
+      },
+    );
+  }
+}
+
+// Main page with dynamic body content
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,77 +60,87 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> items = ["Home", "About", "Contact", "Login", "Sign Up"];
-  String selectedValue = "Home";
+  final List<String> menuItems = [
+    "Home",
+    "About",
+    "Contact",
+    "Login",
+    "Sign Up",
+  ];
+  String selectedMenu = "Home";
 
-  Widget _getSelectedContent() {
-    switch (selectedValue) {
+  Widget getBodyWidget() {
+    switch (selectedMenu) {
       case "About":
-        return Center(child:AboutPage() );
+        return Center(child: AboutPage());
       case "Contact":
-        return Center(child: Text("Contact Page", style: TextStyle(color: Colors.white)));
+        return _buildCenteredText("Contact Page");
       case "Login":
-        return Center(child: Text("Login Page", style: TextStyle(color: Colors.white)));
+        return _buildCenteredText("Login Page");
       case "Sign Up":
-        return Center(child: Text("Sign Up Page", style: TextStyle(color: Colors.white)));
+        return _buildCenteredText("Sign Up Page");
       default:
-        return _adminImage();
+        return Center(child: _adminImage());
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black, // Optional: match design
-      body: SafeArea(
-        child: Column(
-          children: [
-            _titleText(),
-            Expanded(child: _getSelectedContent()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _titleText() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'MemeNote',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-            ),
-          ),
-          CustomDropdown(
-            values: items,
-            onSelected: (value) {
-              setState(() {
-                selectedValue = value;
-              });
-            },
-          ),
-        ],
+  Widget _buildCenteredText(String text) {
+    return Center(
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 24, color: Colors.white),
       ),
     );
   }
 
   Widget _adminImage() {
     return Container(
+      margin: const EdgeInsets.all(20),
       height: 150,
       width: 150,
-      margin: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         image: DecorationImage(
-          fit: BoxFit.contain,
           image: AssetImage("assets/images/admin_circular.png"),
+          fit: BoxFit.contain,
         ),
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.blue.shade800,
+        title: const Text(
+          "MemeNote",
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 28,
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          Center(
+            child: CustomDropdown(
+              values: menuItems,
+              onSelected: (value) {
+                setState(() {
+                  selectedMenu = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(child: getBodyWidget()),
+    );
+  }
+}
+
+void main() {
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
+  );
 }
