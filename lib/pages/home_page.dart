@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memenote/pages/about_page.dart';
+import 'package:memenote/pages/login_page.dart';
+import 'package:memenote/pages/signup_page.dart';
 
 // Reusable dropdown widget
 class CustomDropdown extends StatefulWidget {
@@ -72,25 +74,19 @@ class _HomePageState extends State<HomePage> {
   Widget getBodyWidget() {
     switch (selectedMenu) {
       case "About":
-        return Center(child: AboutPage());
+        return AboutPage();
       case "Contact":
-        return _buildCenteredText("Contact Page");
+        return Text(
+          "Contact Page",
+          style: const TextStyle(fontSize: 24, color: Colors.white),
+        );
       case "Login":
-        return _buildCenteredText("Login Page");
+        return LoginPage();
       case "Sign Up":
-        return _buildCenteredText("Sign Up Page");
+        return SignupPage();
       default:
         return Center(child: _adminImage());
     }
-  }
-
-  Widget _buildCenteredText(String text) {
-    return Center(
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 24, color: Colors.white),
-      ),
-    );
   }
 
   Widget _adminImage() {
@@ -140,7 +136,5 @@ class _HomePageState extends State<HomePage> {
 }
 
 void main() {
-  runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: HomePage()),
-  );
+  runApp(const MaterialApp(home: HomePage()));
 }
