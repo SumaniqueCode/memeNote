@@ -1,0 +1,38 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class AuthService {
+  static Future<String> signup(
+    String name,
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
+    final url = Uri.parse('http://10.0.2.2:8000/api/auth/register');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirmation': confirmPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return 'Signed up successfully!';
+      } else {
+        return data['message'] ?? 'Signup failed';
+      }
+    } catch (e) {
+      return 'Error: $e';
+    }
+  }
+}

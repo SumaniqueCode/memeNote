@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:memenote/api/auth_service.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -18,48 +17,24 @@ class _SignupPageState extends State<SignupPage> {
 
   bool _loading = false;
 
-  Future<void> _signupUser() async {
+  void _signupUser() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
+      final result = await AuthService.signup(
+        _nameController.text,
+        _emailController.text,
+        _passwordController.text,
+        _confirmPasswordController.text,
+      );
 
-      final url = Uri.parse('http://10.0.2.2:8000/api/auth/register');
-
-      try {
-        final response = await http.post(
-          url,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            'name': _nameController.text,
-            'email': _emailController.text,
-            'password': _passwordController.text,
-            'password_confirmation': _confirmPasswordController.text,
-          }),
-        );
-
-        final data = jsonDecode(response.body);
-
-        if (response.statusCode == 200) {
-          const SnackBar(
-            content: Text('Signed up successfully!'),
-            behavior: SnackBarBehavior.floating,
-          );
-        } else {
-          SnackBar(
-            content: Text(data['message'] ?? 'Signup failed'),
-            behavior: SnackBarBehavior.floating,
-          );
-        }
-      } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text(result),
           behavior: SnackBarBehavior.floating,
-        );
-      } finally {
-        setState(() => _loading = false);
-      }
+        ),
+      );
+
+      setState(() => _loading = false);
     }
   }
 
@@ -110,8 +85,8 @@ class _SignupPageState extends State<SignupPage> {
                 labelText: "Password",
                 border: OutlineInputBorder(),
               ),
-              validator:
-                  (value) => value!.length < 6 ? 'Minimum 6 characters' : null,
+              validator: (value) =>
+                  value!.length < 6 ? 'Minimum 6 characters' : null,
             ),
             const SizedBox(height: 10),
             TextFormField(
@@ -121,21 +96,19 @@ class _SignupPageState extends State<SignupPage> {
                 labelText: "Confirm Password",
                 border: OutlineInputBorder(),
               ),
-              validator:
-                  (value) =>
-                      value != _passwordController.text
-                          ? 'Passwords do not match'
-                          : null,
+              validator: (value) =>
+                  value != _passwordController.text
+                      ? 'Passwords do not match'
+                      : null,
             ),
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _loading ? null : _signupUser,
-                child:
-                    _loading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text("Sign Up"),
+                child: _loading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("Sign Up"),
               ),
             ),
           ],
