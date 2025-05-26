@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:memenote/pages/main_layout.dart';
 
-class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MainLayout(
       child: Center(
         child: Text(
-          'This is the About Page',
+          'This is Dashboard',
           style: TextStyle(fontSize: 24, color: Colors.white),
         ),
       ),

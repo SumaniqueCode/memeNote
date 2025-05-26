@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memenote/api/auth_service.dart';
+import 'package:memenote/pages/main_layout.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -26,15 +27,17 @@ class _SignupPageState extends State<SignupPage> {
         _passwordController.text,
         _confirmPasswordController.text,
       );
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(result), behavior: SnackBarBehavior.floating),
       );
 
       setState(() => _loading = false);
+
+      // If signup is successful, navigate to login
+      // if (result.toLowerCase().contains('success')) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Navigator.pushNamed(context, '/login');
+      });
     }
   }
 
@@ -42,76 +45,78 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.sizeOf(context).width;
 
-    return Container(
-      width: deviceWidth,
-      color: Colors.white,
-      padding: const EdgeInsets.all(20.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            const Text(
-              "Sign Up Page",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+    return MainLayout(
+      child: Container(
+        width: deviceWidth,
+        color: Colors.white,
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            spacing: 12,
+            children: [
+              const Text(
+                "Sign Up Page",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: "Full Name",
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: "Full Name",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? 'Name required' : null,
               ),
-              validator: (value) => value!.isEmpty ? 'Name required' : null,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) => value!.isEmpty ? 'Email required' : null,
               ),
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) => value!.isEmpty ? 'Email required' : null,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: "Password",
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
+                ),
+                validator:
+                    (value) =>
+                        value!.length < 6 ? 'Minimum 6 characters' : null,
               ),
-              validator: (value) =>
-                  value!.length < 6 ? 'Minimum 6 characters' : null,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: "Confirm Password",
-                border: OutlineInputBorder(),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: "Confirm Password",
+                  border: OutlineInputBorder(),
+                ),
+                validator:
+                    (value) =>
+                        value != _passwordController.text
+                            ? 'Passwords do not match'
+                            : null,
               ),
-              validator: (value) =>
-                  value != _passwordController.text
-                      ? 'Passwords do not match'
-                      : null,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _loading ? null : _signupUser,
-                child: _loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Sign Up"),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _loading ? null : _signupUser,
+                  child:
+                      _loading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text("Sign Up"),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
