@@ -8,6 +8,7 @@ class MainLayout extends StatelessWidget {
 
   static const List<String> menuItems = [
     "Home",
+    "Memes",
     "About",
     "Contact",
     "Login",
@@ -18,6 +19,9 @@ class MainLayout extends StatelessWidget {
     switch (value) {
       case "Home":
         Navigator.pushNamed(context, '/');
+        break;
+      case "Memes":
+        Navigator.pushNamed(context, '/memes');
         break;
       case "About":
         Navigator.pushNamed(context, '/about');
@@ -39,9 +43,9 @@ class MainLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-         automaticallyImplyLeading: false, // 🔺 This removes the back arrow
+        automaticallyImplyLeading: false, // 🔺 This removes the back arrow
         backgroundColor: Colors.blue.shade800,
         title: const Text(
           "MemeNote",
