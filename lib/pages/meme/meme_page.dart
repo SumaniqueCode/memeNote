@@ -119,12 +119,15 @@ class _MemePageState extends State<MemePage> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              Text(
+                              TextButton(
+                                onPressed: (){Navigator.pushNamed(context, "/meme-details", arguments: meme);},
+                              child:Text(
                                 meme['title'] ?? '',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
+                              ),
                               ),
                               const SizedBox(height: 8),
                               Text(meme['description'] ?? ''),
