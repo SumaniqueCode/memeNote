@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:memenote/api/meme_service.dart';
 import 'package:memenote/pages/main_layout.dart';
+import 'package:memenote/widgets/custom_dropdown.dart';
 
 class CreateMemePage extends StatefulWidget {
   const CreateMemePage({super.key});
@@ -55,6 +56,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
 
   @override
   Widget build(BuildContext context) {
+    const List<String> activeStatuses = ["Active", "Inactive"];
     return MainLayout(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -62,37 +64,69 @@ class _CreateMemePageState extends State<CreateMemePage> {
           key: _formKey,
           child: Column(
             children: [
-              const Text("Create Meme", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const Text(
+                "Create Meme",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(labelText: "Title", border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: "Title",
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) => value!.isEmpty ? 'Title required' : null,
               ),
               const SizedBox(height: 10),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(labelText: "Description", border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 10),
-              TextFormField(
-                controller: _statusController,
-                decoration: const InputDecoration(labelText: "Status", border: OutlineInputBorder()),
+              InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: 'Status',
+                  border: OutlineInputBorder(),
+                  isDense: true, // reduces overall height
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                ),
+                child: CustomDropdown(
+                  values: activeStatuses,
+                  color: Colors.grey.shade900,
+                  bgColor: Colors.grey,
+                  textStyle: TextStyle(color:Colors.grey.shade800, fontSize: 17),
+                  onSelected: (value) {
+                    _statusController.text = value;
+                  },
+                ),
               ),
+
               const SizedBox(height: 10),
               TextFormField(
                 controller: _categoryController,
-                decoration: const InputDecoration(labelText: "Category ID", border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: "Category ID",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 10),
               TextFormField(
                 controller: _tagsController,
-                decoration: const InputDecoration(labelText: "Tags", border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: "Tags",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 10),
               TextFormField(
                 controller: _userIdController,
-                decoration: const InputDecoration(labelText: "User ID", border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: "User ID",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -106,9 +140,10 @@ class _CreateMemePageState extends State<CreateMemePage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _loading ? null : _createMeme,
-                child: _loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Submit Meme"),
+                child:
+                    _loading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Submit Meme"),
               ),
             ],
           ),

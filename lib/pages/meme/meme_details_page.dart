@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memenote/pages/main_layout.dart';
-
 class MemeDetailsPage extends StatelessWidget {
   const MemeDetailsPage({super.key});
 

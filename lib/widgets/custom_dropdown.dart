@@ -3,7 +3,17 @@ import 'package:flutter/material.dart';
 class CustomDropdown extends StatefulWidget {
   final List<String> values;
   final void Function(String)? onSelected;
-  const CustomDropdown({required this.values, this.onSelected, super.key});
+  final Color? color;
+  final Color? bgColor;
+  final TextStyle? textStyle;
+  const CustomDropdown({
+    required this.values,
+    this.onSelected,
+    this.color,
+    this.bgColor,
+    this.textStyle,
+    super.key,
+  });
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
@@ -21,24 +31,27 @@ class _CustomDropdownState extends State<CustomDropdown> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: selectedValue,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-      ),
-      icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
-      dropdownColor: Colors.blue.shade800,
+      style:
+          widget.textStyle ??
+          TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: widget.color ?? Colors.white,
+          ),
+      icon: Icon(Icons.arrow_drop_down, color: widget.color ?? Colors.white),
+      dropdownColor: widget.bgColor ?? Colors.blue.shade800,
       borderRadius: BorderRadius.circular(6),
       underline: const SizedBox(),
-      items: widget.values.map((e) {
-        return DropdownMenuItem(
-          value: e,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Text(e),
-          ),
-        );
-      }).toList(),
+      items:
+          widget.values.map((e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(e),
+              ),
+            );
+          }).toList(),
       onChanged: (newValue) {
         if (newValue != null) {
           setState(() => selectedValue = newValue);
