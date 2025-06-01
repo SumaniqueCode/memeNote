@@ -5,6 +5,7 @@ import 'package:memenote/pages/dashboard/about_page.dart';
 import 'package:memenote/pages/auth/login_page.dart';
 import 'package:memenote/pages/auth/signup_page.dart';
 import 'package:memenote/pages/meme/create_meme_page.dart';
+import 'package:memenote/pages/meme/edit_meme_page.dart';
 import 'package:memenote/pages/meme/meme_details_page.dart';
 import 'package:memenote/pages/meme/meme_page.dart';
 
@@ -17,5 +18,6 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/memes':(context)=>MemePage(),
   '/create-meme':(context)=>CreateMemePage(),
   '/meme-details':(context)=>MemeDetailsPage(),
+  '/edit-meme':(context) => EditMemePage(),
   // Add more routes as needed
 };

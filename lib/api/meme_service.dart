@@ -49,6 +49,52 @@ static Future<String> createMeme(
   }
 }
 
+static Future<String> editMeme(
+  String id,
+  String title,
+  String description,
+  String status,
+  String userId,
+  String tags,
+  String categoryId,
+  XFile? imageFile,
+) async {
+  final url = Uri.parse('http://10.0.2.2:8000/api/create-meme');
+  try {
+    final request = http.MultipartRequest('POST', url);
+
+    // Text fields
+    request.fields['id']= id;
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+    request.fields['status'] = status;
+    request.fields['user_id'] = userId;
+    request.fields['tags'] = tags;
+    request.fields['category_id'] = categoryId;
+
+    // Image file if exists
+    if (imageFile != null) {
+      final mimeType = lookupMimeType(imageFile.path);
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path, contentType: MediaType.parse(mimeType!)),
+      );
+    }
+
+    // Send request
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return 'Meme Edited successfully!';
+    } else {
+      return data['error'] ?? 'Failed to create meme';
+    }
+  } catch (e) {
+    return 'Error: $e';
+  }
+}
+
 
   static Future<dynamic> getAllMemes() async {
     final url = Uri.parse('http://10.0.2.2:8000/api/get-all-memes');
