@@ -28,16 +28,39 @@ class _EditMemePageState extends State<EditMemePage> {
   Map<String, dynamic>? meme;
 
   @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _statusController = TextEditingController();
+    _userIdController = TextEditingController();
+    _tagsController = TextEditingController();
+    _categoryController = TextEditingController();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    meme ??= ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    if (meme == null) {
+      meme = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      _titleController.text = meme!['title'] ?? '';
+      _descriptionController.text = meme!['description'] ?? '';
+      _statusController.text = meme!['status'] ?? '';
+      _userIdController.text = meme!['user_id'].toString();
+      _tagsController.text = meme!['tags'] ?? '';
+      _categoryController.text = meme!['category_id'].toString();
+    }
+  }
 
-    _titleController = TextEditingController(text: meme!['title']);
-    _descriptionController = TextEditingController(text: meme!['description']);
-    _statusController = TextEditingController(text: meme!['status']);
-    _userIdController = TextEditingController(text: meme!['user_id']);
-    _tagsController = TextEditingController(text: meme!['tags']);
-    _categoryController = TextEditingController(text: meme!['category_id']);
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _statusController.dispose();
+    _userIdController.dispose();
+    _tagsController.dispose();
+    _categoryController.dispose();
+    super.dispose();
   }
 
   Future<void> _pickImage() async {
@@ -108,14 +131,16 @@ class _EditMemePageState extends State<EditMemePage> {
                   labelText: 'Status',
                   border: OutlineInputBorder(),
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 ),
                 child: CustomDropdown(
                   values: activeStatuses,
-                  // initialValue: _statusController.text,
+                  initialValue: _statusController.text,
                   color: Colors.grey.shade900,
                   bgColor: Colors.grey,
-                  textStyle: TextStyle(color: Colors.grey.shade800, fontSize: 17),
+                  textStyle:
+                      TextStyle(color: Colors.grey.shade800, fontSize: 17),
                   onSelected: (value) {
                     _statusController.text = value;
                   },
